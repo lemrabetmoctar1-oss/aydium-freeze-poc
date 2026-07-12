@@ -1,0 +1,14 @@
+[package]
+name = "raydium-freeze-poc"
+version = "0.1.0"
+edition = "2021"
+
+[dev-dependencies]
+litesvm = "0.6"
+solana-sdk = "2.3"
+spl-token-2022 = "4"
+spl-associated-token-account = "4"
+
+[[test]]
+name = "freeze_authority_poc"
+path = "tests/freeze_authority_poc.rs"

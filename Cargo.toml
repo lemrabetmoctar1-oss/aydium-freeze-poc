@@ -4,8 +4,8 @@ version = "0.1.0"
 edition = "2021"
 
 [dev-dependencies]
-litesvm = "0.6"
-solana-sdk = "2.3"
+litesvm = "=0.2.3"
+solana-sdk = "=2.0.13"
 spl-token-2022 = "4"
 spl-associated-token-account = "4"
 

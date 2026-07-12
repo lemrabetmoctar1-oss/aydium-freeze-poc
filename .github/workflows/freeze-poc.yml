@@ -1,0 +1,39 @@
+name: Freeze POC
+on: workflow_dispatch
+jobs:
+  build-and-test:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout this PoC repo
+        uses: actions/checkout@v4
+
+      - name: Checkout Raydium CLMM source
+        uses: actions/checkout@v4
+        with:
+          repository: lemrabetmoctar1-oss/raydium-clmm
+          path: raydium-clmm
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: Install system dependencies
+        run: sudo apt-get update && sudo apt-get install -y libudev-dev pkg-config
+
+      - name: Install Solana CLI
+        run: |
+          sh -c "$(curl -sSfL https://release.anza.xyz/stable/install)"
+          echo "$HOME/.local/share/solana/install/active_release/bin" >> $GITHUB_PATH
+
+      - name: Install Anchor CLI
+        run: cargo install --git https://github.com/coral-xyz/anchor --tag v0.32.1 anchor-cli --locked --force
+
+      - name: Build the real Raydium program
+        working-directory: raydium-clmm
+        run: anchor build
+
+      - name: Copy built program into this test project
+        run: |
+          mkdir -p target/deploy
+          cp raydium-clmm/target/deploy/raydium_clmm.so target/deploy/raydium_clmm.so
+
+      - name: Run the PoC test
+        run: cargo test --test freeze_authority_poc -- --nocapture
